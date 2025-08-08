@@ -1,0 +1,53 @@
+[
+    {
+      "name": "Abqaiq Refinery",
+      "lng": 49.668, 
+      "lat": 25.914
+    },
+    {
+      "name": "Ras Tanura Refinery",
+      "lng": 50.048, 
+      "lat": 26.644
+    },
+    {
+      "name": "Jamnagar Refinery",
+      "lng": 70.011, 
+      "lat": 22.337
+    },
+    {
+      "name": "Port Arthur Refinery",
+      "lng": -93.958, 
+      "lat": 29.898
+    },
+    {
+      "name": "Ulsan Refinery",
+      "lng": 129.35, 
+      "lat": 35.52
+    },
+    {
+      "name": "Baytown Refinery",
+      "lng": -95.01,
+      "lat": 29.74
+    },
+    {
+      "name": "Paraguana Refinery Complex",
+      "lng": -70.25,
+      "lat": 11.72
+    },
+    {
+      "name": "Skikda Refinery",
+      "lng": 6.9,
+      "lat": 36.87
+    },
+    {
+      "name": "Sodegaura Refinery",
+      "lng": 140.03,
+      "lat": 35.43
+    },
+    {
+      "name": "Antwerp Refinery",
+      "lng": 4.40,
+      "lat": 51.27
+    }
+  ]
+  

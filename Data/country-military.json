@@ -1,0 +1,15 @@
+{
+  "USA": {
+    "bases": [
+      {
+        "name": "Ramstein Air Base",
+        "location": {
+          "lat": 49.4369,
+          "lng": 7.6003
+        },
+        "type": "Air Base",
+        "description": "Major U.S. Air Force base in Germany, serving as headquarters for U.S. Air Forces in Europe and NATO Allied Air Command."
+      }
+    ]
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "USA": {
+    "party": "Republican Party",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Republican_Disc.svg",
+    "members": [
+      {
+        "id": "1",
+        "name": "Donald J. Trump",
+        "title": "President",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/5/56/Donald_Trump_official_portrait.jpg",
+        "parent": null,
+        "category": "Executive Power"
+      },
+      {
+        "id": "2",
+        "name": "J.D. Vance",
+        "title": "Vice President",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Senator_Vance_official_portrait._118th_Congress.jpg/640px-Senator_Vance_official_portrait._118th_Congress.jpg",
+        "parent": "1",
+        "category": "Executive Power"
+      },
+      {
+        "id": "3",
+        "name": "Susie Wiles",
+        "title": "Chief of Staff",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Susie_Wiles.jpg/640px-Susie_Wiles.jpg",
+        "parent": "1",
+        "category": "Executive Power"
+      },
+      {
+        "id": "4",
+        "name": "Marco Rubio",
+        "title": "Secretary of State & NSA",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Marco_Rubio_official_portrait.jpg/640px-Marco_Rubio_official_portrait.jpg",
+        "parent": "1",
+        "category": "National Security & Foreign Policy"
+      },
+      {
+        "id": "5",
+        "name": "Pete Hegseth",
+        "title": "Secretary of Defense",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Pete_Hegseth_Official_Portrait.jpg",
+        "parent": "1",
+        "category": "National Security & Foreign Policy"
+      },
+      {
+        "id": "6",
+        "name": "Tulsi Gabbard",
+        "title": "Director of National Intelligence",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Tulsi_Gabbard%2C_official_portrait%2C_115th_Congress.jpg/640px-Tulsi_Gabbard%2C_official_portrait%2C_115th_Congress.jpg",
+        "parent": "1",
+        "category": "National Security & Foreign Policy"
+      },
+      {
+        "id": "7",
+        "name": "John Ratcliffe",
+        "title": "CIA Director",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/John_Ratcliffe_official_portrait.jpg/640px-John_Ratcliffe_official_portrait.jpg",
+        "parent": "1",
+        "category": "National Security & Foreign Policy"
+      },
+      {
+        "id": "8",
+        "name": "Kash Patel",
+        "title": "FBI Director",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Kash_Patel_official_portrait.jpg/640px-Kash_Patel_official_portrait.jpg",
+        "parent": "1",
+        "category": "National Security & Foreign Policy"
+      },
+      {
+        "id": "9",
+        "name": "Pam Bondi",
+        "title": "Attorney General",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Pam_Bondi_official_portrait.jpg/640px-Pam_Bondi_official_portrait.jpg",
+        "parent": "1",
+        "category": "Key Domestic Policymakers"
+      },
+      {
+        "id": "10",
+        "name": "Scott Bessent",
+        "title": "Secretary of Treasury",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Scott_Bessent_official_portrait.jpg/640px-Scott_Bessent_official_portrait.jpg",
+        "parent": "1",
+        "category": "Key Domestic Policymakers"
+      },
+      {
+        "id": "11",
+        "name": "Robert F. Kennedy Jr.",
+        "title": "Secretary of Health and Human Services",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Robert_F._Kennedy_Jr._official_portrait.jpg/640px-Robert_F._Kennedy_Jr._official_portrait.jpg",
+        "parent": "1",
+        "category": "Key Domestic Policymakers"
+      },
+      {
+        "id": "12",
+        "name": "Linda McMahon",
+        "title": "Secretary of Education",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Linda_McMahon_official_portrait.jpg/640px-Linda_McMahon_official_portrait.jpg",
+        "parent": "1",
+        "category": "Key Domestic Policymakers"
+      },
+      {
+        "id": "13",
+        "name": "Kristi Noem",
+        "title": "Secretary of Homeland Security",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Kristi_Noem_official_portrait.jpg/640px-Kristi_Noem_official_portrait.jpg",
+        "parent": "1",
+        "category": "Key Domestic Policymakers"
+      },
+      {
+        "id": "14",
+        "name": "Lee Zeldin",
+        "title": "Administrator of Environmental Protection Agency",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Lee_Zeldin_official_portrait.jpg/640px-Lee_Zeldin_official_portrait.jpg",
+        "parent": "1",
+        "category": "Key Domestic Policymakers"
+      }
+    ]
+  },
+  "FRA": {
+    "party": "Renaissance",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Logo_Renaissance_%28France%29.svg",
+    "members": [
+      {
+        "id": "1",
+        "name": "Emmanuel Macron",
+        "title": "President",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Emmanuel_Macron_in_2019.jpg",
+        "parent": null
+      },
+      {
+        "id": "2",
+        "name": "Élisabeth Borne",
+        "title": "Prime Minister",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Elisabeth_Borne_-_2022_%28cropped%29.jpg",
+        "parent": "1"
+      }
+    ]
+  },
+  "RUS": {
+    "party": "United Russia",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/2/2b/United_Russia_logo.svg",
+    "members": [
+      {
+        "id": "1",
+        "name": "Vladimir Putin",
+        "title": "President",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/5/51/%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%9F%D1%83%D1%82%D0%B8%D0%BD_%2818-06-2023%29_%28cropped%29.jpg",
+        "parent": null
+      },
+      {
+        "id": "2",
+        "name": "Mikhail Mishustin",
+        "title": "Prime Minister",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Mikhail_Mishustin_official_portrait.jpg",
+        "parent": "1"
+      }
+    ]
+  }
+} 

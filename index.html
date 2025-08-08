@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapbox Research Tool</title>
+  <link href="style.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+  <style>
+    body, html {
+      background: #181c2a;
+      color: #e0e0e0;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #map {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+    /* Topbar, sidebar, modal, and button dark theme overrides */
+    .projects-sidebar, #info-sidebar, .modal, .project-topbar, .notification-box, .calendar-event-modal, .point-sidebar, .leader-overlay {
+      background: rgba(35, 40, 58, 0.98) !important;
+      color: #e0e0e0 !important;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px #000a;
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+    }
+    .sidebar-header, .notification-header, .leader-overlay-header {
+      background: rgba(26, 30, 45, 0.95);
+      color: #00e6ff;
+      border-radius: 12px 12px 0 0;
+      font-weight: 600;
+      font-size: 1.1em;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .add-project-btn, .close-sidebar-btn, .close-modal-btn, .continue-btn, .settings-btn, .notification-btn, .close-project-btn, #leader-overlay-close {
+      background: #00e6ff;
+      color: #23283a;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #00e6ff44;
+      transition: background 0.18s, color 0.18s;
+    }
+    .add-project-btn:hover, .close-sidebar-btn:hover, .close-modal-btn:hover, .continue-btn:hover, .settings-btn:hover, .notification-btn:hover, .close-project-btn:hover, #leader-overlay-close:hover {
+      background: #00bcd4;
+      color: #fff;
+    }
+    #command-input {
+      background: #23283a;
+      color: #e0e0e0;
+      border: 1px solid #00e6ff;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 1.1em;
+      margin: 10px 0;
+      width: 320px;
+      outline: none;
+      transition: border 0.18s;
+      z-index: 10010;
+    }
+    #command-input:focus {
+      border: 1.5px solid #00bcd4;
+    }
+    .autocomplete-box {
+      background: #23283a;
+      color: #e0e0e0;
+      border: 1px solid #00e6ff;
+      border-radius: 8px;
+      position: absolute;
+      top: 54px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 320px;
+      z-index: 10020;
+      display: none;
+    }
+    .suggestion-item {
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .suggestion-item:hover {
+      background: #00bcd4;
+      color: #23283a;
+    }
+    /* Hide scrollbars for overlays */
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: #23283a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00e6ff44;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 700px) {
+      #command-input, .autocomplete-box { min-width: 90vw; width: 90vw; }
+    }
+    .switch .slider.round {
+      border-radius: 28px;
+    }
+    .switch .slider.round:before {
+      border-radius: 50%;
+    }
+    .switch .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #3a3f5a;
+      transition: .3s;
+      border-radius: 28px;
+    }
+    .switch input:checked + .slider {
+      background: #00e6ff;
+    }
+    .switch .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 4px;
+      bottom: 3px;
+      background: #fff;
+      transition: .3s;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px #0002;
+    }
+    .switch input:checked + .slider:before {
+      transform: translateX(24px);
+      background: #fff;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .widget-card:hover {
+      box-shadow: 0 6px 24px #00e6ff44;
+      border: 1.5px solid #00bcd4;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Command Input Block -->
+  <div id="command-block">
+    <input type="text" id="command-input" placeholder="Enter command..." autocomplete="off" />
+  </div>
+  <div id="suggestions" class="autocomplete-box"></div>
+
+  <!-- Projects Sidebar -->
+  <div id="projects-sidebar" class="projects-sidebar">
+    <div class="sidebar-header">
+      <h2>Projects</h2>
+      <button id="add-project" class="add-project-btn" title="Create new project">+</button>
+      <button id="close-projects-sidebar-btn" class="close-sidebar-btn" title="Close sidebar">&times;</button>
+    </div>
+    <div class="projects-content">
+      <!-- Projects will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Info button and sidebar -->
+  <button id="info-button">Info</button>
+  <div id="info-sidebar">
+    <div id="sidebar-top">
+      <img id="flag-img" class="flag" />
+      <h2 id="sidebar-title">Country Name</h2>
+      <button id="leader-button" class="leader-button">
+        <img id="leader-img" class="leader-photo" />
+        <div class="leader-info-text">
+          <span id="leader-name">Leader Name</span><br/>
+          <small id="leader-party">Political party: </small>
+        </div>
+      </button>
+    </div>
+    <div id="sidebar-content">
+      <div id="military-info" style="display: none;"></div>
+    </div>
+  </div>
+
+  <!-- Project Modal -->
+  <div id="project-modal" class="modal">
+    <div class="modal-content">
+      <h2>Name your project</h2>
+      <input id="project-name-input" type="text" placeholder="Project name..." />
+      <button id="continue-project-btn" class="continue-btn">Continue</button>
+    </div>
+  </div>
+
+  <!-- Project Top Bar -->
+  <div id="project-topbar" class="project-topbar">
+    <div class="topbar-inner">
+      <button id="close-project-btn" class="close-project-btn">Close</button>
+      <span id="active-project-name"></span>
+    </div>
+  </div>
+
+  <!-- Notification Panel -->
+  <div id="notification-panel" style="display:none;position:fixed;top:0;left:0;width:10cm;height:20cm;background:rgba(35,40,58,0.98);color:#fff;border-radius:0 0 16px 0;box-shadow:0 8px 40px #000a;border:1.5px solid #ff3b3b;z-index:10030;flex-direction:column;padding:24px 18px 18px 18px;gap:18px;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:1.25rem;font-weight:600;color:#ff3b3b;">Notifications</span>
+      <button id="close-notification-panel" class="close-modal-btn" title="Close" style="background:#ff3b3b;color:#23283a;font-size:1.5rem;border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;">&times;</button>
+    </div>
+    <!-- Widgets inside notification panel -->
+    <div id="notification-widgets" style="display:flex;flex-direction:column;align-items:flex-start;gap:24px;margin-bottom:18px;">
+      <div id="calendar-widget" class="widget-card" style="width:180px;height:120px;background:#23283a;border-radius:14px;box-shadow:0 2px 12px #0004;border:1.5px solid #00e6ff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow 0.18s, border 0.18s;">
+        <div style="font-size:2.2rem;color:#00e6ff;margin-bottom:8px;">&#128197;</div>
+        <div style="font-size:1.1rem;font-weight:600;">Calendar</div>
+        <div id="calendar-widget-date" style="font-size:0.98rem;color:#b0eaff;margin-top:4px;"></div>
+      </div>
+    </div>
+    <div id="notification-panel-content" style="flex:1;min-height:0;">No notifications.</div>
+  </div>
+
+  <!-- Point Info Card (Modern Floating Design, Bottom Left) -->
+  <div id="point-info-card" class="point-info-card" style="display:none;position:fixed;bottom:88px;left:24px;width:360px;background:#181c2a;color:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,230,255,0.25);border:1.5px solid #00e6ff;z-index:10030;overflow:hidden;">
+    <div class="point-card-header" style="padding:16px 20px;background:rgba(0,230,255,0.12);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,230,255,0.18);">
+      <h3 id="point-title" class="point-title" style="margin:0;font-size:1.2rem;font-weight:600;color:#00e6ff;">Point Information</h3>
+      <button id="close-point-info" class="close-point-info" style="background:none;border:none;color:#00e6ff;font-size:1.5rem;cursor:pointer;padding:4px;line-height:1;border-radius:8px;transition:background 0.2s;">&times;</button>
+    </div>
+    <div id="point-content" class="point-content" style="padding:20px;font-size:1.1rem;">
+      <!-- Point details will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <!-- Leader Overlay Floating Window -->
+  <div id="leader-overlay" class="leader-overlay" style="display:none;">
+    <div class="leader-overlay-header">
+      <span class="leader-overlay-title">Country Leadership</span>
+      <button id="leader-overlay-close" class="leader-overlay-close">&times;</button>
+    </div>
+    <div id="leader-overlay-content" class="leader-overlay-content"></div>
+  </div>
+
+  <!-- Settings Button (bottom left, visible and styled) -->
+  <button id="settings-button" class="settings-btn" title="Settings" style="position:fixed;left:24px;bottom:24px;width:48px;height:48px;border-radius:50%;background:#23283a;color:#00e6ff;font-size:2rem;z-index:10020;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px #0005;border:1.5px solid #00e6ff;cursor:pointer;transition:background 0.2s;">
+    <span style="font-size:2rem;">&#9881;</span>
+  </button>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal" style="display:none;">
+    <div class="modal-content settings-modal-content" style="min-width:340px;min-height:120px;background:#23283a;color:#fff;border-radius:16px;box-shadow:0 8px 40px #000a;border:1.5px solid #00e6ff;z-index:10030;display:flex;flex-direction:column;padding:32px 32px 24px 32px;gap:24px;font-size:1.1rem;align-items:stretch;position:relative;">
+      <button id="close-settings-modal" class="close-modal-btn" title="Close" style="position:absolute;right:18px;top:12px;font-size:2.1rem;background:#00e6ff;border:none;color:#23283a;cursor:pointer;opacity:1;z-index:1;line-height:1;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-weight:bold;">&times;</button>
+      <h2 style="font-size:1.3rem;font-weight:600;margin-bottom:10px;color:#00e6ff;">Settings</h2>
+      <div class="setting-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:18px;">
+        <span style="font-size:1.08rem;">Show labels (country names, places, etc.)</span>
+        <label class="switch" style="display:inline-block;position:relative;width:52px;height:28px;">
+          <input type="checkbox" id="labels-switch" style="opacity:0;width:0;height:0;">
+          <span class="slider round" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#3a3f5a;transition:.3s;border-radius:28px;"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Button (top left, visible and styled) -->
+  <button id="notification-button" class="notification-btn" title="Notifications" style="position:fixed;top:24px;left:24px;width:48px;height:48px;border-radius:50%;background:#23283a;color:#ff3b3b;font-size:2rem;z-index:10020;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px #0005;border:1.5px solid #ff3b3b;cursor:pointer;transition:background 0.2s;">
+    <span style="font-size:2rem;">&#33;</span>
+  </button>
+  <!-- Notification Panel (top left, flush to edges) -->
+  <div id="notification-panel" style="display:none;position:fixed;top:0;left:0;width:10cm;height:20cm;background:rgba(35,40,58,0.98);color:#fff;border-radius:0 0 16px 0;box-shadow:0 8px 40px #000a;border:1.5px solid #ff3b3b;z-index:10030;flex-direction:column;padding:24px 18px 18px 18px;gap:18px;overflow-y:auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-size:1.25rem;font-weight:600;color:#ff3b3b;">Notifications</span>
+      <button id="close-notification-panel" class="close-modal-btn" title="Close" style="background:#ff3b3b;color:#23283a;font-size:1.5rem;border:none;border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;">&times;</button>
+    </div>
+    <!-- Widgets inside notification panel -->
+    <div id="notification-widgets" style="display:flex;flex-direction:column;align-items:flex-start;gap:24px;margin-bottom:18px;">
+      <div id="calendar-widget" class="widget-card" style="width:180px;height:120px;background:#23283a;border-radius:14px;box-shadow:0 2px 12px #0004;border:1.5px solid #00e6ff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:box-shadow 0.18s, border 0.18s;">
+        <div style="font-size:2.2rem;color:#00e6ff;margin-bottom:8px;">&#128197;</div>
+        <div style="font-size:1.1rem;font-weight:600;">Calendar</div>
+        <div id="calendar-widget-date" style="font-size:0.98rem;color:#b0eaff;margin-top:4px;"></div>
+      </div>
+    </div>
+    <div id="notification-panel-content" style="flex:1;min-height:0;">No notifications.</div>
+  </div>
+
+  <!-- Google Calendar-like Fullscreen Modal (NEW, ENGLISH, MODERN DESIGN) -->
+  <div id="calendar-modal" class="calendar-modal-dark" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10040;background:#181c2a;overflow:hidden;">
+        <div id="custom-calendar" class="calendar-root">
+          <div id="calendar-sidebar" class="calendar-sidebar"></div>
+          <div class="calendar-content">
+            <div id="calendar-header" class="calendar-header"></div>
+            <div id="calendar-main" class="calendar-main"></div>
+          </div>
+        </div>
+        <button id="calendar-fab" title="Create event" class="calendar-fab">+</button>
+        <button id="close-calendar-modal" title="Close" class="calendar-close">&times;</button>
+      </div>
+
+  <script src="script_100_percent_working.js"></script>
+  <script src="calendar.js"></script>
+  <script>
+    // Notification panel logic
+    const notifBtn = document.getElementById('notification-button');
+    const notifPanel = document.getElementById('notification-panel');
+    const notifClose = document.getElementById('close-notification-panel');
+    if (notifBtn && notifPanel) {
+      notifBtn.onclick = () => {
+        notifPanel.style.display = 'flex';
+      };
+    }
+    if (notifClose && notifPanel) {
+      notifClose.onclick = () => {
+        notifPanel.style.display = 'none';
+      };
+    }
+    document.addEventListener('mousedown', function(e) {
+      if (notifPanel && notifPanel.style.display === 'flex' && !notifPanel.contains(e.target) && e.target !== notifBtn) {
+        notifPanel.style.display = 'none';
+      }
+    });
+    // Remove any loading overlay after map is loaded
+    window.addEventListener('load', function() {
+      var loadingOverlay = document.getElementById('loading-overlay');
+      if (loadingOverlay) loadingOverlay.remove();
+    });
+
+    // --- Disable command input until map is ready ---
+    const commandInput = document.getElementById('command-input');
+    if (commandInput) {
+      commandInput.disabled = true;
+    }
+    // Enable command input when map is ready
+    function enableCommandInput() {
+      if (commandInput) commandInput.disabled = false;
+    }
+    // Listen for map load event
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.map) {
+        window.map.on('load', enableCommandInput);
+      } else {
+        // If map is not yet created, poll until available
+        const interval = setInterval(function() {
+          if (window.map && window.map.loaded()) {
+            enableCommandInput();
+            clearInterval(interval);
+          }
+        }, 200);
+      }
+    });
+    // --- Command Input: Show point info card by name ---
+    if (commandInput) {
+      commandInput.addEventListener('keydown', async function(e) {
+        if (e.key === 'Enter') {
+          if (commandInput.disabled) return;
+          const value = commandInput.value.trim();
+          if (value) {
+            // Example: "show port Rotterdam" or "show oil field Ghawar"
+            // Parse command and find matching point feature
+            let map = window.map;
+            if (!map) {
+              // Try to get map from Mapbox GL
+              if (window.mapboxgl && mapboxgl.Map && mapboxgl.Map.prototype.queryRenderedFeatures) {
+                map = mapboxgl.Map.prototype;
+              }
+            }
+            if (!map || typeof map.queryRenderedFeatures !== 'function') {
+              alert('Map is not ready yet.');
+              return;
+            }
+            // Get available layers
+            const styleLayers = (map.getStyle && map.getStyle().layers) ? map.getStyle().layers.map(l => l.id) : [];
+            const pointLayers = [
+              'ports-points', 'oil_fields-points', 'nuclear-points', 'pipelines-points', 'powerlines-points', 'refineries-points', 'industrial_zones-points', 'trade_zones-points', 'military-base-points'
+            ];
+            let foundFeature = null;
+            for (const layerId of pointLayers) {
+              if (!styleLayers.includes(layerId)) continue; // Only query existing layers
+              const features = map.queryRenderedFeatures(undefined, {layers: [layerId]});
+              foundFeature = features.find(f => {
+                const props = f.properties || {};
+                return (
+                  (props.name && props.name.toLowerCase().includes(value.toLowerCase())) ||
+                  (props.title && props.title.toLowerCase().includes(value.toLowerCase())) ||
+                  (props.id && props.id.toLowerCase().includes(value.toLowerCase()))
+                );
+              });
+              if (foundFeature) break;
+            }
+            if (foundFeature) {
+              window.forceShowPointInfo = true;
+              if (window.showPointInfo) window.showPointInfo(foundFeature);
+              const pointInfoCard = document.getElementById('point-info-card');
+              if (pointInfoCard) pointInfoCard.style.display = 'flex';
+              if (foundFeature.geometry && foundFeature.geometry.coordinates) {
+                map.flyTo({center: foundFeature.geometry.coordinates, zoom: 6});
+              }
+            } else {
+              alert('No matching point found for: ' + value + '\nAvailable layers: ' + styleLayers.join(', '));
+            }
+          }
+        }
+      });
+    }
+    // --- Info Card Close Button: Reset forceShowPointInfo flag ---
+    const closePointInfoBtn = document.getElementById('close-point-info');
+    if (closePointInfoBtn) {
+      closePointInfoBtn.addEventListener('click', function() {
+        window.forceShowPointInfo = false;
+        const pointInfoCard = document.getElementById('point-info-card');
+        if (pointInfoCard) pointInfoCard.style.display = 'none';
+      });
+    }
+  </script>
+</body>
+</html>

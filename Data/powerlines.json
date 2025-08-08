@@ -1,0 +1,81 @@
+[
+    {
+      "name": "North-South HVDC (China)",
+      "coordinates": [
+        [106.5505, 29.5630],
+        [116.4074, 39.9042]
+      ]
+    },
+    {
+      "name": "Inga-Shaba HVDC (Congo)",
+      "coordinates": [
+        [13.5794, -5.5054],
+        [26.7381, -11.6596]
+      ]
+    },
+    {
+      "name": "Quebec-New England Interconnection",
+      "coordinates": [
+        [-73.5673, 45.5017],
+        [-71.0589, 42.3601]
+      ]
+    },
+    {
+      "name": "Rio-Minas Interconnection (Brazil)",
+      "coordinates": [
+        [-43.1729, -22.9068],
+        [-44.0158, -19.9245]
+      ]
+    },
+    {
+      "name": "Gujarat-Maharashtra HVDC (India)",
+      "coordinates": [
+        [72.5714, 23.0225],
+        [73.8567, 18.5204]
+      ]
+    },
+    {
+      "name": "UHV Backbone (China)",
+      "coordinates": [
+        [112.5492, 37.8570],
+        [117.2000, 39.1333]
+      ]
+    },
+    {
+      "name": "NorNed Interconnector (Norway–Netherlands)",
+      "coordinates": [
+        [5.7365, 58.9701],   
+        [4.8130, 51.8225]    
+      ]
+    },
+    {
+      "name": "BritNed Interconnector (UK–Netherlands)",
+      "coordinates": [
+        [0.7146, 51.4691],   
+        [3.9946, 51.9696]    
+      ]
+    },
+    {
+      "name": "France–Spain Interconnector",
+      "coordinates": [
+        [2.2950, 43.7102],  
+        [2.9406, 42.2660]    
+      ]
+    },
+    {
+      "name": "Germany–Denmark West Interconnector",
+      "coordinates": [
+        [9.7134, 54.7960],   
+        [9.0903, 54.2218]    
+      ]
+    },
+    {
+      "name": "Baltic Cable (Germany–Sweden)",
+      "coordinates": [
+        [10.8610, 54.0924],   
+        [13.0025, 55.6049]    
+      ]
+    }
+  ]
+  
+  
