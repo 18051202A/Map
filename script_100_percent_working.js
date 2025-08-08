@@ -1312,6 +1312,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!calendarMain) return;
     if (calendarState.view === 'week') {
       renderWeekView(calendarMain);
+      // Render any events for the week view so newly created events appear
+      renderEvents('week', null, calendarMain);
     } else {
       renderMonthView(calendarMain);
     }
