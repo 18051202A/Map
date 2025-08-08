@@ -325,10 +325,40 @@
       }
     });
     // Remove any loading overlay after map is loaded
+
     window.addEventListener('load', function() {
       var loadingOverlay = document.getElementById('loading-overlay');
       if (loadingOverlay) loadingOverlay.remove();
     });
+
+    // --- Calendar Modal Logic ---
+    const calendarWidget = document.getElementById('calendar-widget');
+    const calendarModal = document.getElementById('calendar-modal');
+    const closeCalendarModalBtn = document.getElementById('close-calendar-modal');
+    const calendarFab = document.getElementById('calendar-fab');
+
+    if (calendarWidget && calendarModal) {
+      calendarWidget.onclick = () => {
+        calendarModal.style.display = 'block';
+      };
+    }
+    if (closeCalendarModalBtn && calendarModal) {
+      closeCalendarModalBtn.onclick = () => {
+        calendarModal.style.display = 'none';
+      };
+    }
+    // Optionally, clicking outside the modal closes it
+    document.addEventListener('mousedown', function(e) {
+      if (calendarModal && calendarModal.style.display === 'block' && !calendarModal.contains(e.target) && e.target !== calendarWidget) {
+        calendarModal.style.display = 'none';
+      }
+    });
+    // Floating action button for event creation (placeholder)
+    if (calendarFab) {
+      calendarFab.onclick = () => {
+        alert('Create event functionality coming soon!');
+      };
+    }
 
     // --- Disable command input until map is ready ---
     const commandInput = document.getElementById('command-input');
